@@ -69,7 +69,7 @@ export default function App() {
     }
     setIsLoading(true);
     setError("");
-    fetch(`http://www.omdbapi.com/?apikey=${key}&s=${query}`)
+    fetch(`https://www.omdbapi.com/?apikey=${key}&s=${query}`)
       .then((res) => {
         if (res.ok) {
           return res.json();
@@ -321,7 +321,7 @@ function MovieDetails({ selectedId, onCloseMovie }) {
   const key = "767c2e8a";
   useEffect(() => {
     setIsLoading(true);
-    fetch(`http://www.omdbapi.com/?apikey=${key}&i=${selectedId}`)
+    fetch(`https://www.omdbapi.com/?apikey=${key}&i=${selectedId}`)
       .then((res) => {
         if (res.ok) {
           return res.json();
