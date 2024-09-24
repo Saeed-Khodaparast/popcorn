@@ -104,13 +104,12 @@ export default function App() {
   }
 
   return (
-    <>
+    <div className="container">
       <NavBar>
         <Logo />
         <Search query={query} onSetQuery={handleSearch} />
         <Result movies={movies} />
       </NavBar>
-
       <Main>
         <Box>
           {isLoading && <Loader />}
@@ -142,7 +141,7 @@ export default function App() {
           )}
         </Box>
       </Main>
-    </>
+    </div>
   );
 }
 
