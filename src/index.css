@@ -27,6 +27,9 @@ body {
   color: var(--color-text);
   background-color: var(--color-background-900);
   padding: 2.4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Custom scrollbar styles for WebKit browsers */
@@ -49,6 +52,10 @@ body {
   border-radius: 10px; /* Roundness of the scrollbar track */
 }
 
+.container {
+  width: 90.5rem;
+}
+
 /* ******* */
 
 .nav-bar {
@@ -56,6 +63,7 @@ body {
   grid-template-columns: 1fr 1fr 1fr;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
   height: 7.2rem;
   padding: 0 3.2rem;
   background-color: var(--color-primary);
@@ -64,6 +72,7 @@ body {
 
 .main {
   margin-top: 2.4rem;
+  width: 100%;
   height: calc(100vh - 7.2rem - 3 * 2.4rem);
   display: flex;
   gap: 2.4rem;
@@ -71,8 +80,8 @@ body {
 }
 
 .box {
-  width: 48rem;
-  max-width: 48rem;
+  width: 50%;
+  max-width: 50%;
   background-color: var(--color-background-500);
   border-radius: 0.9rem;
   overflow: auto;
@@ -126,8 +135,11 @@ body {
 }
 
 @media (max-width: 992px) {
+  .container {
+    width: 96vw;
+  }
   .search {
-    width: 44vw;
+    width: 48vw;
   }
 }
 
