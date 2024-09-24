@@ -59,6 +59,7 @@ export default function App() {
   const [error, setError] = useState("");
   const [selectedId, setSelectedId] = useState(null);
 
+  const preAddress = /*"https://cors-anywhere.herokuapp.com/"*/ "";
   const key = "767c2e8a";
 
   useEffect(() => {
@@ -69,9 +70,7 @@ export default function App() {
     }
     setIsLoading(true);
     setError("");
-    fetch(
-      `https://cors-anywhere.herokuapp.com/http://www.omdbapi.com/?apikey=${key}&s=${query}`
-    )
+    fetch(`${preAddress}http://www.omdbapi.com/?apikey=${key}&s=${query}`)
       .then((res) => {
         if (res.ok) {
           return res.json();
@@ -123,6 +122,8 @@ export default function App() {
         <Box>
           {selectedId !== null ? (
             <MovieDetails
+              apiKey={key}
+              apiPreAddress={preAddress}
               selectedId={selectedId}
               onCloseMovie={handleCloseMovie}
             />
@@ -304,7 +305,7 @@ function WatchedMovie({ movie }) {
   );
 }
 
-function MovieDetails({ selectedId, onCloseMovie }) {
+function MovieDetails({ apiKey, apiPreAddress, selectedId, onCloseMovie }) {
   const [movie, setMovie] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const {
@@ -320,11 +321,10 @@ function MovieDetails({ selectedId, onCloseMovie }) {
     Genre: genre,
   } = movie;
   console.log(title, year);
-  const key = "767c2e8a";
   useEffect(() => {
     setIsLoading(true);
     fetch(
-      `https://cors-anywhere.herokuapp.com/https://www.omdbapi.com/?apikey=${key}&i=${selectedId}`
+      `${apiPreAddress}https://www.omdbapi.com/?apikey=${apiKey}&i=${selectedId}`
     )
       .then((res) => {
         if (res.ok) {
