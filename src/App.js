@@ -59,9 +59,10 @@ export default function App() {
   const [error, setError] = useState("");
   const [selectedId, setSelectedId] = useState(null);
 
+  /* "https://cors-anywhere.herokuapp.com/ */
+
   const apiAccessMode = "https";
-  const preAddress =
-    apiAccessMode === "https" ? "https://cors-anywhere.herokuapp.com/" : "";
+  const preAddress = apiAccessMode === "https" ? "https://corsproxy.io/?" : "";
   const key = "767c2e8a";
 
   useEffect(() => {
