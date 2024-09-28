@@ -58,6 +58,7 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [selectedId, setSelectedId] = useState(null);
+  const [activeTab, setActiveTab] = useState(0);
 
   /* "https://cors-anywhere.herokuapp.com/ */
 
@@ -114,6 +115,10 @@ export default function App() {
     setWatched((watched) => watched.filter((movie) => movie.imdbID !== id));
   }
 
+  function handleActiveTab(index) {
+    setActiveTab(index);
+  }
+
   return (
     <div className="container">
       <NavBar>
@@ -121,15 +126,50 @@ export default function App() {
         <Search query={query} onSetQuery={handleSearch} />
         <Result movies={movies} />
       </NavBar>
+      <Tab activeTab={activeTab} onChangeTab={handleActiveTab}>
+        <TabContent>
+          {activeTab === 0 && (
+            <ListBox>
+              {isLoading && <Loader />}
+              {!isLoading &&
+                !error &&
+                (selectedId !== null ? (
+                  <MovieDetails
+                    apiKey={key}
+                    apiPreAddress={preAddress}
+                    selectedId={selectedId}
+                    onCloseMovie={handleCloseMovie}
+                    onAddwatched={handleAddWatched}
+                    watched={watched}
+                  />
+                ) : (
+                  <MoviesList movies={movies} onMovieClick={handleMovieClick} />
+                ))}
+              {error && <ErrorMessage message={error} />}
+            </ListBox>
+          )}
+          {activeTab === 1 && (
+            <WatchedBox>
+              <>
+                <Summary watched={watched} />
+                <WatchedList
+                  watched={watched}
+                  onDeleteWatched={handleDeleteWatched}
+                />
+              </>
+            </WatchedBox>
+          )}
+        </TabContent>
+      </Tab>
       <Main>
-        <Box>
+        <ListBox>
           {isLoading && <Loader />}
           {!isLoading && !error && (
             <MoviesList movies={movies} onMovieClick={handleMovieClick} />
           )}
           {error && <ErrorMessage message={error} />}
-        </Box>
-        <Box>
+        </ListBox>
+        <WatchedBox>
           {selectedId !== null ? (
             <MovieDetails
               apiKey={key}
@@ -155,7 +195,7 @@ export default function App() {
               /> */}
             </>
           )}
-        </Box>
+        </WatchedBox>
       </Main>
     </div>
   );
@@ -170,7 +210,12 @@ function NavBar({ children }) {
 function Logo() {
   return (
     <div className="logo">
-      <span role="img">🍿</span>
+      <img
+        src={process.env.PUBLIC_URL + "/logo.png"}
+        alt="Description"
+        width="32px"
+      />
+      {/* <span role="img">🍿</span> */}
       <h1>Popcorn</h1>
     </div>
   );
@@ -200,10 +245,25 @@ function Main({ children }) {
   return <main className="main">{children}</main>;
 }
 
-function Box({ children }) {
+function ListBox({ children }) {
   const [isOpen1, setIsOpen1] = useState(true);
   return (
-    <div className="box">
+    <div className="box-list">
+      <button
+        className="btn-toggle"
+        onClick={() => setIsOpen1((open) => !open)}
+      >
+        {isOpen1 ? "-" : "+"}
+      </button>
+      {isOpen1 && children}
+    </div>
+  );
+}
+
+function WatchedBox({ children }) {
+  const [isOpen1, setIsOpen1] = useState(true);
+  return (
+    <div className="box-watched">
       <button
         className="btn-toggle"
         onClick={() => setIsOpen1((open) => !open)}
@@ -225,6 +285,31 @@ function ErrorMessage({ message }) {
       <span>⛔</span> {message}
     </p>
   );
+}
+
+function Tab({ activeTab, onChangeTab, children }) {
+  const tabs = ["List", "Watched"];
+
+  return (
+    <>
+      <div className="tabs">
+        {tabs.map((tab, index) => (
+          <div
+            key={index}
+            className={`tab ${activeTab === index ? "active" : ""}`}
+            onClick={() => onChangeTab(index)}
+          >
+            {tab}
+          </div>
+        ))}
+      </div>
+      {children}
+    </>
+  );
+}
+
+function TabContent({ children }) {
+  return <main className="tab-content">{children}</main>;
 }
 
 function MoviesList({ movies, onMovieClick }) {
@@ -375,6 +460,15 @@ function MovieDetails({
       .finally(() => {});
   }, [selectedId]);
 
+  useEffect(() => {
+    if (!title) return;
+    document.title = `Movie | ${title}`;
+
+    return function () {
+      document.title = "Popcorn";
+    };
+  }, [title]);
+
   function handleAdd() {
     const newWatchedMovie = {
       imdbID: selectedId,
@@ -430,8 +524,8 @@ function MovieDetails({
                 </>
               ) : (
                 <p>
-                  You rated this movie {watchedUserRating}
-                  <spa>⭐</spa>
+                  You rated this movie by {watchedUserRating}
+                  <span>⭐</span>
                 </p>
               )}
             </div>
