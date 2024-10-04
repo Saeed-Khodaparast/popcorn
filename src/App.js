@@ -68,17 +68,11 @@ export default function App() {
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState(null);
   const [activeTab, setActiveTab] = useState(0);
-  const [watched, setWatched] = useState(function () {
-    return JSON.parse(localStorage.getItem("watched"));
-  });
+  const [watched, setWatched] = useLocalStorage([], "watched");
   const { key, preAddress, movies, isLoading, error } = useMovies(
     query,
     handleCloseMovie
   );
-
-  useEffect(() => {
-    localStorage.setItem("watched", JSON.stringify(watched));
-  }, [watched]);
 
   // #region handlers
 
