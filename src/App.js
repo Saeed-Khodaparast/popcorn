@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NavBar from "./components/topBar/NavBar";
 import Logo from "./components/topBar/Logo";
 import Search from "./components/topBar/Search";
@@ -68,11 +68,17 @@ export default function App() {
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState(null);
   const [activeTab, setActiveTab] = useState(0);
-  const [watched, setWatched] = useLocalStorage("watched");
+  const [watched, setWatched] = useState(function () {
+    return JSON.parse(localStorage.getItem("watched"));
+  });
   const { key, preAddress, movies, isLoading, error } = useMovies(
     query,
     handleCloseMovie
   );
+
+  useEffect(() => {
+    localStorage.setItem("watched", JSON.stringify(watched));
+  }, [watched]);
 
   // #region handlers
 
